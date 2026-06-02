@@ -108,6 +108,7 @@ export const recommendTrades = createServerFn({ method: "POST" })
     try {
       const raw = await callLovableAI({
         maxTokens: 2500,
+        responseFormat: { type: "json_object" },
         messages: [
           { role: "system", content: data.lang === "hi" ? RECOMMEND_SYSTEM_HI : RECOMMEND_SYSTEM_EN },
           {

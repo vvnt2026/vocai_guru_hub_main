@@ -8,6 +8,7 @@ export async function callLovableAI(opts: {
   messages: ChatMessage[];
   model?: string;
   maxTokens?: number;
+  responseFormat?: any;
 }): Promise<string> {
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error("Missing GEMINI_API_KEY");
@@ -22,6 +23,7 @@ export async function callLovableAI(opts: {
       model: opts.model ?? "gemini-2.5-flash",
       messages: opts.messages,
       max_tokens: opts.maxTokens ?? 800,
+      ...(opts.responseFormat && { response_format: opts.responseFormat }),
     }),
   });
 
