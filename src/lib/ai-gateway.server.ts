@@ -19,7 +19,7 @@ export async function callLovableAI(opts: {
       "Authorization": `Bearer ${key}`,
     },
     body: JSON.stringify({
-      model: opts.model ?? "gemini-1.5-flash",
+      model: opts.model ?? "gemini-2.5-flash",
       messages: opts.messages,
       max_tokens: opts.maxTokens ?? 800,
     }),
