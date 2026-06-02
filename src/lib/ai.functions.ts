@@ -107,7 +107,7 @@ export const recommendTrades = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const raw = await callLovableAI({
-        maxTokens: 900,
+        maxTokens: 2500,
         messages: [
           { role: "system", content: data.lang === "hi" ? RECOMMEND_SYSTEM_HI : RECOMMEND_SYSTEM_EN },
           {
@@ -116,8 +116,15 @@ export const recommendTrades = createServerFn({ method: "POST" })
           },
         ],
       });
-      const m = raw.match(/\{[\s\S]*\}/);
-      const parsed = m ? JSON.parse(m[0]) : JSON.parse(raw);
+      
+      // Clean markdown formatting if Gemini wrapped the JSON
+      let cleaned = raw.trim();
+      if (cleaned.startsWith("```")) {
+        cleaned = cleaned.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "").trim();
+      }
+      
+      const m = cleaned.match(/\{[\s\S]*\}/);
+      const parsed = m ? JSON.parse(m[0]) : JSON.parse(cleaned);
       const trades = (parsed.trades ?? []) as TradeRecommendation[];
       return { trades, error: null as string | null };
     } catch (e) {
