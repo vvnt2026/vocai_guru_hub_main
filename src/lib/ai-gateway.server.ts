@@ -1,4 +1,4 @@
-// Server-only helper for Lovable AI Gateway via fetch (no extra deps).
+// Server-only helper for Google Gemini AI via fetch (OpenAI compatible endpoint).
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
   content: string;
@@ -9,17 +9,17 @@ export async function callLovableAI(opts: {
   model?: string;
   maxTokens?: number;
 }): Promise<string> {
-  const key = process.env.LOVABLE_API_KEY;
-  if (!key) throw new Error("Missing LOVABLE_API_KEY");
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error("Missing GEMINI_API_KEY");
 
-  const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+  const res = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Lovable-API-Key": key,
+      "Authorization": `Bearer ${key}`,
     },
     body: JSON.stringify({
-      model: opts.model ?? "google/gemini-3-flash-preview",
+      model: opts.model ?? "gemini-1.5-flash",
       messages: opts.messages,
       max_tokens: opts.maxTokens ?? 800,
     }),
@@ -28,8 +28,7 @@ export async function callLovableAI(opts: {
   if (!res.ok) {
     const text = await res.text().catch(() => "");
     if (res.status === 429) throw new Error("Rate limit exceeded. Please try again shortly.");
-    if (res.status === 402) throw new Error("AI credits exhausted. Add credits in Workspace settings.");
-    throw new Error(`AI gateway error ${res.status}: ${text.slice(0, 200)}`);
+    throw new Error(`Gemini API error ${res.status}: ${text.slice(0, 200)}`);
   }
 
   const data = await res.json();
