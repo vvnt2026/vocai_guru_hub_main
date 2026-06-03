@@ -54,7 +54,7 @@ function AssignmentCheck() {
           <div className="flex items-start justify-between">
             <div>
               <div className="text-[14px] font-medium">Practical Assignment 1 — HTML Webpage</div>
-              <div className="text-[11px] text-red-600">Due: कल, 15 November 2024</div>
+              <div className="text-[11px] text-red-600">Due: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
               <div className="text-[11px] text-gray-500">IT & ITeS — Module 5: HTML & CSS</div>
             </div>
             <span className="rounded bg-teal-100 px-2 py-0.5 text-[10px] font-semibold text-teal-800">NSQF Level 3</span>
